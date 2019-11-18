@@ -60,10 +60,19 @@ public class User extends Auditable
     private List<UserRoles> userroles = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
-               cascade = CascadeType.ALL,
-               orphanRemoval = true)
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+@JsonIgnoreProperties("user")
+private List<Useremail> useremails = new ArrayList<>();
+
+
+    /////////devlibs//////////
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JsonIgnoreProperties("user")
-    private List<Useremail> useremails = new ArrayList<>();
+    private List<DevLib> devLibs = new ArrayList<>();
+    ///////////////////////////////////////
 
     public User()
     {
