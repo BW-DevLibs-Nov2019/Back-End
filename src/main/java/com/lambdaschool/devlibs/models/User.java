@@ -54,6 +54,7 @@ public class User extends Auditable
     @Email(message = "Email should be valid format username@domain.toplevel")
     private String primaryemail;
 
+
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL)
     @JsonIgnoreProperties("user")
