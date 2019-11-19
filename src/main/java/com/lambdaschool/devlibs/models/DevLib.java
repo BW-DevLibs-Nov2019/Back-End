@@ -13,18 +13,18 @@ import javax.persistence.*;
 @Table(name = "devlibs")
 @ApiModel(value = "DevLib",
         description = "Controls Dev-Libs Actions")
-public class DevLib extends Auditable{
+public class DevLib extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-            private Long devlibid;
+    private Long devlibid;
 
-////////////key///////////////
-    @ManyToOne
-    @JoinColumn(name = "userid",
+    ////////////key///////////////
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "users",
             nullable = false)
-    @JsonIgnoreProperties("userid")
-    private DevLib devLib;
+    @JsonIgnoreProperties("devlibs")
+    private User user;
     ///////////key///////////////
 
 
@@ -32,9 +32,12 @@ public class DevLib extends Auditable{
     private String paragraph;
     private String devlibtitle;
 
-    public DevLib(String paragraph, String devlibtitle) {
+    public DevLib(User user, String paragraph, String devlibtitle) {
+        this.user = user;
         this.paragraph = paragraph;
         this.devlibtitle = devlibtitle;
+
+
     }
 
     public Long getDevlibid() {
@@ -43,6 +46,14 @@ public class DevLib extends Auditable{
 
     public void setDevlibid(Long devlibid) {
         this.devlibid = devlibid;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getParagraph() {
@@ -61,5 +72,6 @@ public class DevLib extends Auditable{
         this.devlibtitle = devlibtitle;
     }
 
-    DevLib(){}
+    DevLib() {
+    }
 }

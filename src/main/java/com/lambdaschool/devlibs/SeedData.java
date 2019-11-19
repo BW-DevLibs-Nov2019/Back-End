@@ -3,10 +3,7 @@ package com.lambdaschool.devlibs;
 import com.github.javafaker.Faker;
 import com.github.javafaker.service.FakeValuesService;
 import com.github.javafaker.service.RandomService;
-import com.lambdaschool.devlibs.models.Role;
-import com.lambdaschool.devlibs.models.User;
-import com.lambdaschool.devlibs.models.UserRoles;
-import com.lambdaschool.devlibs.models.Useremail;
+import com.lambdaschool.devlibs.models.*;
 import com.lambdaschool.devlibs.services.RoleService;
 import com.lambdaschool.devlibs.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,5 +136,8 @@ public class SeedData implements CommandLineRunner
                                        fakeValuesService.bothify("????##@gmail.com")));
             userService.save(fakeUser);
         }
+        ArrayList<DevLib> devLibs = new ArrayList<>();
+        User u1000 = new User("ronnie", "password", "ronnie@gmail.com", admins);
+        u1000.getDevLibs().add(new DevLib(u1000,"Test paragraph", "TEST title"));
     }
 }

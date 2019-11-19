@@ -161,6 +161,13 @@ private List<Useremail> useremails = new ArrayList<>();
         this.userroles = userroles;
     }
 
+    public List<DevLib> getDevLibs()
+
+    {
+        return devLibs;
+    }
+
+////////////comment out on deployment///////////////////////////
     public List<Useremail> getUseremails()
     {
         return useremails;
@@ -170,7 +177,7 @@ private List<Useremail> useremails = new ArrayList<>();
     {
         this.useremails = useremails;
     }
-
+///////////////////////////////////////////////////////////
     @JsonIgnore
     public List<SimpleGrantedAuthority> getAuthority()
     {
