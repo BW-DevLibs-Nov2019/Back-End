@@ -83,4 +83,3 @@ public class UserRoles extends Auditable implements Serializable
     }
 
 }
-
