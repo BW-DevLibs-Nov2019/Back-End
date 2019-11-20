@@ -72,7 +72,7 @@ private List<Useremail> useremails = new ArrayList<>();
             cascade = CascadeType.ALL,
             orphanRemoval = true)
     @JsonIgnoreProperties("user")
-    private List<DevLib> devLibs = new ArrayList<>();
+    private List<DevLib> devlibs = new ArrayList<>();
     ///////////////////////////////////////
 
     public User()
@@ -165,7 +165,7 @@ private List<Useremail> useremails = new ArrayList<>();
     public List<DevLib> getDevLibs()
 
     {
-        return devLibs;
+        return devlibs;
     }
 
 ////////////comment out on deployment///////////////////////////
