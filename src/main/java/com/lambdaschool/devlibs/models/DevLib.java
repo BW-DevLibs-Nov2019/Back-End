@@ -29,10 +29,11 @@ public class DevLib extends Auditable {
 
 
     @Column(nullable = true)
-    private String paragraph;
     private String devlibtitle;
+    private String paragraph;
 
-    public DevLib(User user, String paragraph, String devlibtitle) {
+
+    public DevLib(User user, String devlibtitle, String paragraph) {
         this.user = user;
         this.paragraph = paragraph;
         this.devlibtitle = devlibtitle;

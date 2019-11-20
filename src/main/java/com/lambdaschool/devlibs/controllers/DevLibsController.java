@@ -64,8 +64,10 @@ public class DevLibsController {
     //Post addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
     @PostMapping(value = "/create", consumes = {"application/json"},
             produces = {"application/json"})
-    public ResponseEntity<?> addNewDevLib(HttpServletRequest request, @Valid @RequestBody DevLib newDevLib)throws URISyntaxException{
-        logger.trace(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
+    public ResponseEntity<?> addNewDevLib(HttpServletRequest request, @Valid @RequestBody DevLib newDevLib, Authentication authentication)throws URISyntaxException{
+       // logger.trace(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
+        User user = userService.findByName(authentication.name());
+        newDevLib.setUser(user);
         newDevLib = devLibService.save(newDevLib);
 
         HttpHeaders responseHeaders = new HttpHeaders();
