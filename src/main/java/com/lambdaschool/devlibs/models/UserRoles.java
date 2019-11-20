@@ -8,12 +8,13 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 @Loggable
 @Entity
 @Table(name = "userroles",
-       uniqueConstraints = {@UniqueConstraint(columnNames = {"userid", "roleid"})})
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"userid", "roleid"})})
 @ApiModel(value = "Userroles",
-          description = "Which user has what roles")
+        description = "Which user has what roles")
 public class UserRoles extends Auditable implements Serializable
 {
     @Id
@@ -78,12 +79,8 @@ public class UserRoles extends Auditable implements Serializable
     public int hashCode()
     {
         return Objects.hash(getUser(),
-                            getRole());
+                getRole());
     }
 
-    @Override
-    public String toString()
-    {
-        return "UserRoles{" + "user=" + user.getUserid() + ", role=" + role.getRoleid() + '}';
-    }
 }
+
