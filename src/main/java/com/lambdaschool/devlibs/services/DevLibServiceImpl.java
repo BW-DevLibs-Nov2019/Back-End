@@ -4,6 +4,7 @@ package com.lambdaschool.devlibs.services;
 import com.lambdaschool.devlibs.exceptions.ResourceNotFoundException;
 import com.lambdaschool.devlibs.logging.Loggable;
 import com.lambdaschool.devlibs.models.DevLib;
+import com.lambdaschool.devlibs.models.User;
 import com.lambdaschool.devlibs.repository.DevLibRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class DevLibServiceImpl implements DevLibService {
     @Override
     public DevLib update(DevLib devLib, long id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 
         DevLib updatedDevLib = devLibRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("DevLibs id "+ id + " not found"));
 
@@ -55,6 +58,16 @@ public class DevLibServiceImpl implements DevLibService {
     }
 
     @Override
+    public DevLib save(@NotNull DevLib devLib, User user) {
+        DevLib newDevLib = new DevLib();
+
+        newDevLib.setDevlibtitle(devLib.getDevlibtitle());
+        newDevLib.setParagraph(devLib.getParagraph());
+
+        newDevLib.setUser(user);
+        return devLibRepository.save(newDevLib);
+    }
+   /* @Override
     public DevLib save(DevLib devLib) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (devLib.getUser().getUsername().equalsIgnoreCase(authentication.getName())){
@@ -62,7 +75,7 @@ public class DevLibServiceImpl implements DevLibService {
         }else {
             throw new ResourceNotFoundException((authentication.getName() + "User is not authorized to save"));
         }
-    }
+    }*/
 
     @Override
     public List<DevLib> listAllDevLibs() {

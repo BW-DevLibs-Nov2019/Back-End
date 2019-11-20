@@ -20,8 +20,8 @@ public class DevLib extends Auditable {
     private Long devlibid;
 
     ////////////key///////////////
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users",
+    @ManyToOne//(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid",
             nullable = false)
     @JsonIgnoreProperties("devlibs")
     private User user;
@@ -73,6 +73,6 @@ public class DevLib extends Auditable {
         this.devlibtitle = devlibtitle;
     }
 
-    DevLib() {
+    public DevLib() {
     }
 }
