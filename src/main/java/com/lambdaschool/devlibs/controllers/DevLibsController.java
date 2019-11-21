@@ -69,6 +69,7 @@ public class DevLibsController {
     }
 
 
+    // GET findAnswersByDevLibId https://dev-libs-bw.herokuapp.com/devlibs/devlib/answers/{devlibid}
     @GetMapping(value = "/devlib/answers/{devlibid}",
             produces = {"application/json"})
     public ResponseEntity<?> findAnswersByDevLibId(
@@ -79,26 +80,23 @@ public class DevLibsController {
         return new ResponseEntity<>(answers,
                 HttpStatus.OK);
     }
-    //Post addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
-  /*  @PostMapping(value = "/create", consumes = {"application/json"},
-            produces = {"application/json"})
-    public ResponseEntity<?> addNewDevLib(HttpServletRequest request, @Valid @RequestBody DevLib newDevLib, Authentication authentication)throws URISyntaxException{
-       // logger.trace(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
-        User user = userService.findByName(authentication.name());
-        newDevLib.setUser(user);
-        newDevLib = devLibService.save(newDevLib);
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newDevLibURI = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{devlibid}")
-                .buildAndExpand(newDevLib.getDevlibid())
-                .toUri();
-        responseHeaders.setLocation(newDevLibURI);
-        return new ResponseEntity<>("Added new Dev Lib", responseHeaders, HttpStatus.CREATED);
-
-    }*/
-
+    //POST  addNewDevLibAnswers https://dev-libs-bw.herokuapp.com/devlibs/devlib/answers/{devlibid}
   @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
+  @PostMapping(value = "/devlib/answers/{devlibid}")
+  public ResponseEntity<?> addNewDevLibAnswers(@Valid
+                                                 @RequestBody Answers answers, @PathVariable long devlibid){
+
+
+     Answers newAnswer = answersService.save(answers);
+     answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
+
+      return new ResponseEntity<>(HttpStatus.CREATED);
+
+
+  }
+
+  /*@PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
   @PostMapping(value = "/devlibs/answers/{devlibid}")
   public ResponseEntity<?> addNewDevLibAnswers(@Valid
                                                  @RequestBody Answers answers, @PathVariable long devlibid){
@@ -111,8 +109,9 @@ public class DevLibsController {
 
 
 
-  }
+  }*/
 
+    //POST addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
 
     @PostMapping(value = "/create",
             consumes = {"application/json"},
