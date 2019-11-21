@@ -61,6 +61,7 @@ public class User extends Auditable
     @JsonIgnoreProperties("user")
     private List<UserRoles> userroles = new ArrayList<>();
 
+
     @OneToMany(mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true)
@@ -169,7 +170,15 @@ public class User extends Auditable
         return devlibs;
     }
 
-////////////comment out on deployment///////////////////////////
+    public List<DevLib> getDevlibs() {
+        return devlibs;
+    }
+
+    public void setDevlibs(List<DevLib> devlibs) {
+        this.devlibs = devlibs;
+    }
+
+    ////////////comment out on deployment///////////////////////////
     public List<Useremail> getUseremails()
     {
         return useremails;

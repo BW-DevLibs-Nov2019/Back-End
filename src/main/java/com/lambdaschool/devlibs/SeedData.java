@@ -117,7 +117,7 @@ public class SeedData implements CommandLineRunner
                                                                     new RandomService());
         Faker nameFaker = new Faker(new Locale("en-US"));
 
-        for (int i = 0; i < 100; i++)
+      /*  for (int i = 0; i < 100; i++)
         {
             new User();
             User fakeUser;
@@ -138,6 +138,6 @@ public class SeedData implements CommandLineRunner
         }
         ArrayList<DevLib> devLibs = new ArrayList<>();
         User u1000 = new User("ronnie", "password", "ronnie@gmail.com", admins);
-        u1000.getDevLibs().add(new DevLib(u1000,"Test paragraph", "TEST title"));
+        u1000.getDevLibs().add(new DevLib(u1000,"Test paragraph", "TEST title"));*/
     }
 }

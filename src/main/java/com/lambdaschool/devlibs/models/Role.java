@@ -39,6 +39,12 @@ public class Role extends Auditable
     @JsonIgnoreProperties("role")
     private List<UserRoles> userroles = new ArrayList<>();
 
+
+
+
+
+
+
     public Role()
     {
     }

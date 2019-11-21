@@ -1,11 +1,14 @@
 package com.lambdaschool.devlibs.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lambdaschool.devlibs.logging.Loggable;
 import io.swagger.annotations.ApiModel;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /*each user will have a user name, password, id, and an array of objects, each object is going to have a title, id and a paragraph.*/
 @Loggable
@@ -15,17 +18,30 @@ import javax.persistence.*;
         description = "Controls Dev-Libs Actions")
 public class DevLib extends Auditable {
 
+    private String story;
+    @Transient
+    List<String> answerstrings = new ArrayList<>();
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long devlibid;
 
     ////////////key///////////////
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid",
-            nullable = false)
+    @JoinColumn(name = "userid", nullable = false
+            )
     @JsonIgnoreProperties("devlibs")
+    @JsonIgnore
     private User user;
     ///////////key///////////////
+
+    @OneToMany(mappedBy = "devLib",
+            cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("devLib")
+    @JsonIgnore
+    private List<DevLibAnswers> devLibAnswers = new ArrayList<>();
+
+
 
 
     @Column(nullable = true)
@@ -33,12 +49,36 @@ public class DevLib extends Auditable {
     private String paragraph;
 
 
-    public DevLib(User user, String devlibtitle, String paragraph) {
+    public DevLib(String story, User user, List<DevLibAnswers> devLibAnswers, String devlibtitle, String paragraph) {
+        this.story = story;
         this.user = user;
-        this.paragraph = paragraph;
+        this.devLibAnswers = devLibAnswers;
         this.devlibtitle = devlibtitle;
+        this.paragraph = paragraph;
+    }
 
+    public List<String> getAnswerstrings() {
+        return answerstrings;
+    }
 
+    public void setAnswerstrings(List<String> answerstrings) {
+        this.answerstrings = answerstrings;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
+    }
+
+    public List<DevLibAnswers> getDevLibAnswers() {
+        return devLibAnswers;
+    }
+
+    public void setDevLibAnswers(List<DevLibAnswers> devLibAnswers) {
+        this.devLibAnswers = devLibAnswers;
     }
 
     public Long getDevlibid() {

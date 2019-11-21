@@ -2,11 +2,14 @@ package com.lambdaschool.devlibs.controllers;
 
 import com.lambdaschool.devlibs.handlers.RestExceptionHandler;
 import com.lambdaschool.devlibs.logging.Loggable;
+import com.lambdaschool.devlibs.models.Answers;
 import com.lambdaschool.devlibs.models.DevLib;
 import com.lambdaschool.devlibs.models.User;
+import com.lambdaschool.devlibs.services.AnswerService;
 import com.lambdaschool.devlibs.services.DevLibService;
 import com.lambdaschool.devlibs.services.UserService;
 import io.swagger.annotations.Api;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,9 @@ public class DevLibsController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AnswerService answersService;
+
     //Get listAllDevLibs https://dev-libs-bw.herokuapp.com/devlibs/alldevlibsforuser
     @GetMapping(value = "/alldevlibsforuser", produces = {"application/json"})
     public ResponseEntity<?> listAllDevLibs(
@@ -44,6 +50,9 @@ public class DevLibsController {
         // logger.trace(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         User user = userService.findByName(authentication.getName());
         List<DevLib> myDevLibs = user.getDevLibs();
+        for(int i = 0; i < myDevLibs.size(); i++){
+            myDevLibs.get(i).setAnswerstrings(answersService.findAnswersByDevLibId(myDevLibs.get(i).getDevlibid()));
+        }
         return new ResponseEntity<>(myDevLibs, HttpStatus.OK);
     }
 
@@ -56,6 +65,18 @@ public class DevLibsController {
 
         List<DevLib> devLibs = devLibService.findDevLibsByUserName(username);
         return new ResponseEntity<>(devLibs,
+                HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/devlib/answers/{devlibid}",
+            produces = {"application/json"})
+    public ResponseEntity<?> findAnswersByDevLibId(
+            @PathVariable
+                    Long devlibid) {
+
+        List<String> answers = answersService.findAnswersByDevLibId(devlibid);
+        return new ResponseEntity<>(answers,
                 HttpStatus.OK);
     }
     //Post addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
@@ -77,6 +98,22 @@ public class DevLibsController {
 
     }*/
 
+  @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
+  @PostMapping(value = "/devlibs/answers/{devlibid}")
+  public ResponseEntity<?> addNewDevLibAnswers(@Valid
+                                                 @RequestBody Answers answers, @PathVariable long devlibid){
+
+
+     Answers newAnswer = answersService.save(answers);
+     answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
+
+      return new ResponseEntity<>(HttpStatus.CREATED);
+
+
+
+  }
+
+
     @PostMapping(value = "/create",
             consumes = {"application/json"},
             produces = {"application/json"})
@@ -88,11 +125,11 @@ public class DevLibsController {
         newDevLib = devLibService.save(newDevLib, user);
         HttpHeaders responseHeaders = new HttpHeaders();
 
-        URI newEatzURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{devlibid}").buildAndExpand(newDevLib.getDevlibid()).toUri();
-        responseHeaders.setLocation(newEatzURI);
+        URI newDevLibsURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{devlibid}").buildAndExpand(newDevLib.getDevlibid()).toUri();
+        responseHeaders.setLocation(newDevLibsURI);
 
         System.out.println(newDevLib.toString());
-        return new ResponseEntity<>(newDevLib, responseHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(newDevLib, responseHeaders, HttpStatus.CREATED);
     }
 
     //Put updateDevLib https://dev-libs-bw.herokuapp.com/devlibs/devlib/{devlibid}

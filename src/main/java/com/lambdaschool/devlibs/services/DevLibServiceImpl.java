@@ -6,6 +6,7 @@ import com.lambdaschool.devlibs.logging.Loggable;
 import com.lambdaschool.devlibs.models.DevLib;
 import com.lambdaschool.devlibs.models.User;
 import com.lambdaschool.devlibs.repository.DevLibRepository;
+import com.lambdaschool.devlibs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,9 @@ public class DevLibServiceImpl implements DevLibService {
 
     @Autowired
     private DevLibRepository devLibRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
 
     @Override
@@ -44,6 +48,10 @@ public class DevLibServiceImpl implements DevLibService {
                     updatedDevLib.setDevlibtitle(devLib.getDevlibtitle());
                 }
 
+                if(devLib.getStory()!=null){
+                    updatedDevLib.setStory(devLib.getStory());
+                }
+
                 if(devLib.getParagraph()!=null){
                     updatedDevLib.setParagraph(devLib.getParagraph());
                 }
@@ -59,13 +67,22 @@ public class DevLibServiceImpl implements DevLibService {
 
     @Override
     public DevLib save(@NotNull DevLib devLib, User user) {
+        Authentication authentication = SecurityContextHolder.getContext()
+                .getAuthentication();
+
+        User authenticatedUser = userRepository.findByUsername(authentication.getName());
+
         DevLib newDevLib = new DevLib();
+        authenticatedUser.getDevLibs().add(newDevLib);
+        newDevLib.setUser(authenticatedUser);
 
         newDevLib.setDevlibtitle(devLib.getDevlibtitle());
         newDevLib.setParagraph(devLib.getParagraph());
+        newDevLib.setStory(devLib.getStory());
+       //authenticatedUser = userRepository.save(authenticatedUser);
 
-        newDevLib.setUser(user);
-        return devLibRepository.save(newDevLib);
+
+       return devLibRepository.save(newDevLib);
     }
    /* @Override
     public DevLib save(DevLib devLib) {
