@@ -28,8 +28,7 @@ public class DevLib extends Auditable {
 
     ////////////key///////////////
     @ManyToOne//(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userid", nullable = false
-            )
+    @JoinColumn(name = "userid", nullable = false)
     @JsonIgnoreProperties("devlibs")
     @JsonIgnore
     private User user;

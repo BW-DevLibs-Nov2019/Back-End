@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 @Loggable
 @Entity
-@Table(name = "devlibanswers", uniqueConstraints = {@UniqueConstraint(columnNames = {"devlibid", "answerid"})})
+@Table(name = "devlibanswers")
 @ApiModel(value = "DevLibAnswers",
         description = "Answer for devlibs")
 public class DevLibAnswers extends Auditable implements Serializable{

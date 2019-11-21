@@ -4,6 +4,7 @@ import com.lambdaschool.devlibs.handlers.RestExceptionHandler;
 import com.lambdaschool.devlibs.logging.Loggable;
 import com.lambdaschool.devlibs.models.ErrorDetail;
 import com.lambdaschool.devlibs.models.User;
+import com.lambdaschool.devlibs.services.AnswerService;
 import com.lambdaschool.devlibs.services.UserService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class UserController
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+   private AnswerService answersService;
 
     // http://localhost:2019/users/users/?page=1&size=1
     // http://localhost:2019/users/users/?sort=username,desc&sort=<field>,asc
@@ -352,6 +356,10 @@ public class UserController
                             .toUpperCase() + " " + request.getRequestURI() + " accessed");
 
         User u = userService.findByName(authentication.getName());
+        for (int i = 0; i < u.getDevlibs().size(); i++) {
+           u.getDevlibs().get(i).setAnswerstrings(answersService.findAnswersByDevLibId(u.getDevlibs().get(i).getDevlibid()));
+        }
+
         return new ResponseEntity<>(u,
                                     HttpStatus.OK);
     }

@@ -49,8 +49,8 @@ public class DevLibsController {
             Authentication authentication) {
         // logger.trace(request.getMethod().toUpperCase() + " " + request.getRequestURI() + " accessed");
         User user = userService.findByName(authentication.getName());
-        List<DevLib> myDevLibs = user.getDevLibs();
-        for(int i = 0; i < myDevLibs.size(); i++){
+        List<DevLib> myDevLibs = user.getDevlibs();
+        for (int i = 0; i < myDevLibs.size(); i++) {
             myDevLibs.get(i).setAnswerstrings(answersService.findAnswersByDevLibId(myDevLibs.get(i).getDevlibid()));
         }
         return new ResponseEntity<>(myDevLibs, HttpStatus.OK);
@@ -82,34 +82,19 @@ public class DevLibsController {
     }
 
     //POST  addNewDevLibAnswers https://dev-libs-bw.herokuapp.com/devlibs/devlib/answers/{devlibid}
-  @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
-  @PostMapping(value = "/devlib/answers/{devlibid}")
-  public ResponseEntity<?> addNewDevLibAnswers(@Valid
-                                                 @RequestBody Answers answers, @PathVariable long devlibid){
+    @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
+    @PostMapping(value = "/devlib/answers/{devlibid}")
+    public ResponseEntity<?> addNewDevLibAnswers(@Valid
+                                                 @RequestBody Answers answers, @PathVariable long devlibid) {
 
 
-     Answers newAnswer = answersService.save(answers);
-     answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
+        Answers newAnswer = answersService.save(answers);
+        answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
 
-      return new ResponseEntity<>(HttpStatus.CREATED);
-
-
-  }
-
-  /*@PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
-  @PostMapping(value = "/devlibs/answers/{devlibid}")
-  public ResponseEntity<?> addNewDevLibAnswers(@Valid
-                                                 @RequestBody Answers answers, @PathVariable long devlibid){
+        return new ResponseEntity<>(HttpStatus.CREATED);
 
 
-     Answers newAnswer = answersService.save(answers);
-     answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
-
-      return new ResponseEntity<>(HttpStatus.CREATED);
-
-
-
-  }*/
+    }
 
     //POST addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
 
@@ -122,6 +107,9 @@ public class DevLibsController {
                                           org.springframework.security.core.Authentication authentication) throws URISyntaxException {
         User user = userService.findByName(authentication.getName());
         newDevLib = devLibService.save(newDevLib, user);
+
+        newDevLib.setAnswerstrings(answersService.findAnswersByDevLibId(newDevLib.getDevlibid()));
+
         HttpHeaders responseHeaders = new HttpHeaders();
 
         URI newDevLibsURI = ServletUriComponentsBuilder.fromCurrentRequest().path("/{devlibid}").buildAndExpand(newDevLib.getDevlibid()).toUri();
@@ -154,3 +142,18 @@ public class DevLibsController {
 
 
 }
+
+/*@PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
+  @PostMapping(value = "/devlibs/answers/{devlibid}")
+  public ResponseEntity<?> addNewDevLibAnswers(@Valid
+                                                 @RequestBody Answers answers, @PathVariable long devlibid){
+
+
+     Answers newAnswer = answersService.save(answers);
+     answersService.insertDevLibAnswers(devlibid, newAnswer.getAnswerid());
+
+      return new ResponseEntity<>(HttpStatus.CREATED);
+
+
+
+  }*/

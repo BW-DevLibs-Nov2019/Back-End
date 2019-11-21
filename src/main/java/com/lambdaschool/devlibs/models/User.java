@@ -22,7 +22,7 @@ import java.util.List;
 @Loggable
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties({"userroles","useremails","primaryemail","devLibs","devlibs","DevLibs"})
+@JsonIgnoreProperties({"userroles","useremails"})
 public class User extends Auditable
 {
     @ApiModelProperty(name = "user id",
@@ -164,11 +164,6 @@ public class User extends Auditable
         this.userroles = userroles;
     }
 
-    public List<DevLib> getDevLibs()
-
-    {
-        return devlibs;
-    }
 
     public List<DevLib> getDevlibs() {
         return devlibs;

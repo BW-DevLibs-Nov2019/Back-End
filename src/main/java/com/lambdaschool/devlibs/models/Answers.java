@@ -30,8 +30,7 @@ public class Answers extends  Auditable implements Serializable {
                 value = "The Name of the Answer. This name is hard coded throughout the application so change it with reservations!",
                 required = true,
                 example = "DATA")
-        @Column(nullable = false,
-                unique = true)
+        @Column(nullable = false)
         private String answer;
 
         @ApiModelProperty(name = "DevLibAnswers",
@@ -47,6 +46,10 @@ public class Answers extends  Auditable implements Serializable {
         public Answers(String answer, List<DevLibAnswers> devLibAnswers) {
                 this.answer = answer;
                 this.devLibAnswers = devLibAnswers;
+        }
+
+        public Answers(String answer){
+                this.answer = answer;
         }
 
         public long getAnswerid() {

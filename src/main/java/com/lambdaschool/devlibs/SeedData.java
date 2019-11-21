@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 @Transactional
-//@Component
+@Component
 public class SeedData implements CommandLineRunner
 {
     @Autowired
