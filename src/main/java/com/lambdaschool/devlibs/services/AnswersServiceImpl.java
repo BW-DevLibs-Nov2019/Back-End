@@ -104,7 +104,7 @@ public class AnswersServiceImpl implements AnswerService {
         newAnswers.setAnswer(answers.getAnswer());
         if (answers.getDevLibAnswers()
                 .size() > 0) {
-            throw new ResourceFoundException("User Answerss are not updated through Answers. See endpoint POST: users/user/{userid}/answers/{roleid}");
+            throw new ResourceFoundException("User Answers are not updated through Answers. See endpoint POST: users/user/{userid}/answers/{roleid}");
         }
 
         return answerrepo.save(answers);
