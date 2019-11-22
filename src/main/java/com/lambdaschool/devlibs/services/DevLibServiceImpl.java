@@ -61,6 +61,10 @@ public class DevLibServiceImpl implements DevLibService {
                 updatedDevLib.setParagraph(devLib.getParagraph());
             }
 
+            if (devLib.getAnswerstrings() != null) {
+                updatedDevLib.setAnswerstrings(devLib.getAnswerstrings());
+            }
+
             return devLibRepository.save(updatedDevLib);
 
         } else {

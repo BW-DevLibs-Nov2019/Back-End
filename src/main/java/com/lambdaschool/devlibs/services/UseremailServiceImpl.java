@@ -16,40 +16,34 @@ import java.util.List;
 @Loggable
 @Transactional
 @Service(value = "useremailService")
-public class UseremailServiceImpl implements UseremailService
-{
+public class UseremailServiceImpl implements UseremailService {
     @Autowired
     private UseremailRepository useremailrepos;
 
     @Override
-    public List<Useremail> findAll()
-    {
+    public List<Useremail> findAll() {
         List<Useremail> list = new ArrayList<>();
         useremailrepos.findAll()
-                      .iterator()
-                      .forEachRemaining(list::add);
+                .iterator()
+                .forEachRemaining(list::add);
         return list;
     }
 
     @Override
-    public Useremail findUseremailById(long id)
-    {
+    public Useremail findUseremailById(long id) {
         return useremailrepos.findById(id)
-                             .orElseThrow(() -> new ResourceNotFoundException("Useremail with id " + id + " Not Found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Useremail with id " + id + " Not Found!"));
     }
 
     @Override
     public List<Useremail> findByUserName(String username,
-                                          boolean isAdmin)
-    {
+                                          boolean isAdmin) {
         Authentication authentication = SecurityContextHolder.getContext()
-                                                             .getAuthentication();
+                .getAuthentication();
         if (username.equalsIgnoreCase(authentication.getName()
-                                                    .toLowerCase()) || isAdmin)
-        {
+                .toLowerCase()) || isAdmin) {
             return useremailrepos.findAllByUser_Username(username.toLowerCase());
-        } else
-        {
+        } else {
             throw new ResourceNotFoundException(authentication.getName() + " not authorized to make change");
         }
     }
@@ -57,26 +51,21 @@ public class UseremailServiceImpl implements UseremailService
     @Transactional
     @Override
     public void delete(long id,
-                       boolean isAdmin)
-    {
+                       boolean isAdmin) {
         if (useremailrepos.findById(id)
-                          .isPresent())
-        {
+                .isPresent()) {
             Authentication authentication = SecurityContextHolder.getContext()
-                                                                 .getAuthentication();
+                    .getAuthentication();
             if (useremailrepos.findById(id)
-                              .get()
-                              .getUser()
-                              .getUsername()
-                              .equalsIgnoreCase(authentication.getName()) || isAdmin)
-            {
+                    .get()
+                    .getUser()
+                    .getUsername()
+                    .equalsIgnoreCase(authentication.getName()) || isAdmin) {
                 useremailrepos.deleteById(id);
-            } else
-            {
+            } else {
                 throw new ResourceNotFoundException(authentication.getName() + " not authorized to make change");
             }
-        } else
-        {
+        } else {
             throw new ResourceNotFoundException("Useremail with id " + id + " Not Found!");
         }
     }
@@ -85,28 +74,23 @@ public class UseremailServiceImpl implements UseremailService
     @Override
     public Useremail update(long useremailid,
                             String emailaddress,
-                            boolean isAdmin)
-    {
+                            boolean isAdmin) {
         Authentication authentication = SecurityContextHolder.getContext()
-                                                             .getAuthentication();
+                .getAuthentication();
         if (useremailrepos.findById(useremailid)
-                          .isPresent())
-        {
+                .isPresent()) {
             if (useremailrepos.findById(useremailid)
-                              .get()
-                              .getUser()
-                              .getUsername()
-                              .equalsIgnoreCase(authentication.getName()) || isAdmin)
-            {
+                    .get()
+                    .getUser()
+                    .getUsername()
+                    .equalsIgnoreCase(authentication.getName()) || isAdmin) {
                 Useremail useremail = findUseremailById(useremailid);
                 useremail.setUseremail(emailaddress.toLowerCase());
                 return useremailrepos.save(useremail);
-            } else
-            {
+            } else {
                 throw new ResourceNotFoundException(authentication.getName() + " not authorized to make change");
             }
-        } else
-        {
+        } else {
             throw new ResourceNotFoundException("Useremail with id " + useremailid + " Not Found!");
         }
     }

@@ -12,8 +12,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableAuthorizationServer
-public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter
-{
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
     static final String CLIENT_ID = System.getenv("OAUTHCLIENTID");
     static final String CLIENT_SECRET = System.getenv("OAUTHCLIENTSECRET");
 
@@ -23,7 +22,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     static final String SCOPE_READ = "read";
     static final String SCOPE_WRITE = "write";
     static final String TRUST = "trust";
-    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60; 
+    static final int ACCESS_TOKEN_VALIDITY_SECONDS = 6 * 60 * 60;
 
     @Autowired
     private TokenStore tokenStore;
@@ -35,26 +34,24 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private PasswordEncoder encoder;
 
     @Override
-    public void configure(ClientDetailsServiceConfigurer configurer) throws Exception
-    {
+    public void configure(ClientDetailsServiceConfigurer configurer) throws Exception {
         configurer.inMemory()
-                  .withClient(CLIENT_ID)
-                  .secret(encoder.encode(CLIENT_SECRET))
-                  .authorizedGrantTypes(GRANT_TYPE_PASSWORD,
-                                        AUTHORIZATION_CODE,
-                                        IMPLICIT)
-                  .scopes(SCOPE_READ,
-                          SCOPE_WRITE,
-                          TRUST)
-                  .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS);
+                .withClient(CLIENT_ID)
+                .secret(encoder.encode(CLIENT_SECRET))
+                .authorizedGrantTypes(GRANT_TYPE_PASSWORD,
+                        AUTHORIZATION_CODE,
+                        IMPLICIT)
+                .scopes(SCOPE_READ,
+                        SCOPE_WRITE,
+                        TRUST)
+                .accessTokenValiditySeconds(ACCESS_TOKEN_VALIDITY_SECONDS);
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception
-    {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
         endpoints.tokenStore(tokenStore)
-                 .authenticationManager(authenticationManager);
+                .authenticationManager(authenticationManager);
         endpoints.pathMapping("/oauth/token",
-                              "/login");
+                "/login");
     }
 }

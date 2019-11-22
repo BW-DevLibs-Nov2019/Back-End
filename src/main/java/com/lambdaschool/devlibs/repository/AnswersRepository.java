@@ -15,13 +15,13 @@ public interface AnswersRepository extends CrudRepository<Answers, Long> {
     @Query(value = "SELECT COUNT(*) as count FROM devlibanswers WHERE devlibid = :devlibid AND answerid = :answerid",
             nativeQuery = true)
     JustTheCount checkDevLibAnswersCombo(long devlibid,
-                                     long answerid);
+                                         long answerid);
 
     @Transactional
     @Modifying
     @Query(value = "DELETE FROM devlibanswers WHERE devlibid = :devlibid AND answerid = :answerid", nativeQuery = true)
     void deleteDevLibAnswers(long devlibid,
-                         long answerid);
+                             long answerid);
 
     @Transactional
     @Modifying
@@ -36,8 +36,8 @@ public interface AnswersRepository extends CrudRepository<Answers, Long> {
     @Query(value = "UPDATE answers SET name = :name, last_modified_by = :answer, last_modified_date = CURRENT_TIMESTAMP WHERE answerid = :answerid",
             nativeQuery = true)
     void updateAnswers(String answer,
-                        long answerid,
-                        String name);
+                       long answerid,
+                       String name);
 
     @Transactional
     @Modifying

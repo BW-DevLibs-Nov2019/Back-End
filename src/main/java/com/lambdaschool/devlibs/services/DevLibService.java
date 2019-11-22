@@ -7,23 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface DevLibService  {
+public interface DevLibService {
 
 
-   List<DevLib> findDevLibsByUserName(String username);
-   DevLib update(DevLib devLib, long id);
+    List<DevLib> findDevLibsByUserName(String username);
 
-   DevLib save(DevLib devLib, User user);
+    DevLib update(DevLib devLib, long id);
 
-   List<DevLib>listAllDevLibs();
+    DevLib save(DevLib devLib, User user);
 
-   void deleteDevLibById(Long id);
+    List<DevLib> listAllDevLibs();
+
+    void deleteDevLibById(Long id);
 
 
+    // DevLib save(DevLib devLib);
 
-
-   // DevLib save(DevLib devLib);
-
-   // DevLib update(String title, DevLib devLib);
+    // DevLib update(String title, DevLib devLib);
 
 }

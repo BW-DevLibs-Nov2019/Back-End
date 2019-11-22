@@ -47,62 +47,57 @@ import java.util.List;
 // bean shared across controller classes
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @RestControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler
-{
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(RestExceptionHandler.class);
 
-    public RestExceptionHandler()
-    {
+    public RestExceptionHandler() {
         super();
     }
 
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe)
-    {
+    public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
         errorDetail.setTitle("Resource Not Found");
         errorDetail.setDetail(rnfe.getMessage());
         errorDetail.setDeveloperMessage(rnfe.getClass()
-                                            .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.NOT_FOUND);
+                null,
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException rnfe)
-    {
+    public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException rnfe) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
         errorDetail.setTitle("Resource Not Found");
         errorDetail.setDetail(rnfe.getMessage());
         errorDetail.setDeveloperMessage(rnfe.getClass()
-                                            .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.NOT_FOUND);
+                null,
+                HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceFoundException.class)
-    public ResponseEntity<?> handleResourceFoundException(ResourceFoundException rfe)
-    {
+    public ResponseEntity<?> handleResourceFoundException(ResourceFoundException rfe) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Unexpected Resource");
         errorDetail.setDetail(rfe.getMessage());
         errorDetail.setDeveloperMessage(rfe.getClass()
-                                           .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
 
@@ -110,8 +105,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex,
                                                         HttpHeaders headers,
                                                         HttpStatus status,
-                                                        WebRequest request)
-    {
+                                                        WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
@@ -120,8 +114,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setDeveloperMessage(request.getDescription(true));
 
         return new ResponseEntity<>(errorDetail,
-                                    headers,
-                                    HttpStatus.NOT_FOUND);
+                headers,
+                HttpStatus.NOT_FOUND);
     }
 
 
@@ -129,8 +123,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex,
                                                                    HttpHeaders headers,
                                                                    HttpStatus status,
-                                                                   WebRequest request)
-    {
+                                                                   WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
@@ -139,8 +132,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setDeveloperMessage("Rest Handler Not Found (check for valid URI)");
 
         return new ResponseEntity<>(errorDetail,
-                                    headers,
-                                    HttpStatus.NOT_FOUND);
+                headers,
+                HttpStatus.NOT_FOUND);
     }
 
 
@@ -148,8 +141,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex,
                                                                          HttpHeaders headers,
                                                                          HttpStatus status,
-                                                                         WebRequest request)
-    {
+                                                                         WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
@@ -158,35 +150,32 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         errorDetail.setDeveloperMessage("HTTP Method Not Valid for Endpoint (check for valid URI and proper HTTP Method)");
 
         return new ResponseEntity<>(errorDetail,
-                                    headers,
-                                    HttpStatus.NOT_FOUND);
+                headers,
+                HttpStatus.NOT_FOUND);
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
-                                                                  WebRequest request)
-    {
+                                                                  WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Validation Errors");
         errorDetail.setDetail("Input validation failed");
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         List<FieldError> fieldErrors = ex.getBindingResult()
-                                         .getFieldErrors();
-        for (FieldError fe : fieldErrors)
-        {
+                .getFieldErrors();
+        for (FieldError fe : fieldErrors) {
             List<ValidationError> validationErrorList = errorDetail.getErrors()
-                                                                   .get(fe.getField());
-            if (validationErrorList == null)
-            {
+                    .get(fe.getField());
+            if (validationErrorList == null) {
                 validationErrorList = new ArrayList<>();
                 errorDetail.getErrors()
-                           .put(fe.getField(),
+                        .put(fe.getField(),
                                 validationErrorList);
             }
             ValidationError validationError = new ValidationError();
@@ -196,8 +185,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
         }
 
         return new ResponseEntity<>(errorDetail,
-                                    headers,
-                                    HttpStatus.BAD_REQUEST);
+                headers,
+                HttpStatus.BAD_REQUEST);
     }
 
 
@@ -205,19 +194,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
-                                                                  WebRequest request)
-    {
+                                                                  WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(status.value());
         errorDetail.setTitle("Message Not Readable");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    headers,
-                                    status);
+                headers,
+                status);
     }
 
 
@@ -225,25 +213,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
                                                                      HttpHeaders headers,
                                                                      HttpStatus status,
-                                                                     WebRequest request)
-    {
+                                                                     WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         StringBuilder builder = new StringBuilder();
         builder.append(ex.getContentType());
         builder.append(" media type is not supported. Supported media types are ");
         ex.getSupportedMediaTypes()
-          .forEach(t -> builder.append(t + " "));
+                .forEach(t -> builder.append(t + " "));
 
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(status.value());
         errorDetail.setTitle("Method not supported");
         errorDetail.setDetail(builder.toString());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
 
@@ -251,19 +238,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex,
                                                                HttpHeaders headers,
                                                                HttpStatus status,
-                                                               WebRequest request)
-    {
+                                                               WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle(ex.getVariableName() + " Missing Path Variable");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
 
@@ -272,216 +258,201 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler
                                                              Object body,
                                                              HttpHeaders headers,
                                                              HttpStatus status,
-                                                             WebRequest request)
-    {
+                                                             WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         errorDetail.setTitle("Internal Server Error");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.INTERNAL_SERVER_ERROR);
+                null,
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
                                                                       HttpHeaders headers,
                                                                       HttpStatus status,
-                                                                      WebRequest request)
-    {
+                                                                      WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Media Type Not Acceptable");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex,
                                                                           HttpHeaders headers,
                                                                           HttpStatus status,
-                                                                          WebRequest request)
-    {
+                                                                          WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Missing Servlet Request Parameter");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleServletRequestBindingException(ServletRequestBindingException ex,
                                                                           HttpHeaders headers,
                                                                           HttpStatus status,
-                                                                          WebRequest request)
-    {
+                                                                          WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Servlet Request Binding Exception");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleConversionNotSupported(ConversionNotSupportedException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
-                                                                  WebRequest request)
-    {
+                                                                  WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Conversion Not Supported");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
                                                                   HttpHeaders headers,
                                                                   HttpStatus status,
-                                                                  WebRequest request)
-    {
+                                                                  WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Message Not Writable");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex,
                                                                      HttpHeaders headers,
                                                                      HttpStatus status,
-                                                                     WebRequest request)
-    {
+                                                                     WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Missing Servlet Request");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleBindException(BindException ex,
                                                          HttpHeaders headers,
                                                          HttpStatus status,
-                                                         WebRequest request)
-    {
+                                                         WebRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Bind Exception");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleAsyncRequestTimeoutException(AsyncRequestTimeoutException ex,
                                                                         HttpHeaders headers,
                                                                         HttpStatus status,
-                                                                        WebRequest webRequest)
-    {
+                                                                        WebRequest webRequest) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.REQUEST_TIMEOUT.value());
         errorDetail.setTitle("Async Request Timeout");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.REQUEST_TIMEOUT);
+                null,
+                HttpStatus.REQUEST_TIMEOUT);
     }
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<?> handleAllOtherExceptions(Exception ex,
-                                                         HttpServletRequest request)
-    {
+                                                         HttpServletRequest request) {
         ErrorDetail errorDetail = new ErrorDetail();
         errorDetail.setTimestamp(new Date().getTime());
         errorDetail.setStatus(HttpStatus.BAD_REQUEST.value());
         errorDetail.setTitle("Exception");
         errorDetail.setDetail(ex.getMessage());
         errorDetail.setDeveloperMessage(ex.getClass()
-                                          .getName());
+                .getName());
 
-        try
-        {
+        try {
             Throwable cause = ((TransactionSystemException) ex).getRootCause();
-            if (cause instanceof ConstraintViolationException)
-            {
+            if (cause instanceof ConstraintViolationException) {
                 ArrayList<ValidationError> myErrorList = new ArrayList<>();
                 Iterator<ConstraintViolation<?>> itr = ((ConstraintViolationException) cause).getConstraintViolations()
-                                                                                             .iterator();
-                while (itr.hasNext())
-                {
+                        .iterator();
+                while (itr.hasNext()) {
                     ConstraintViolation itrnext = itr.next();
                     ValidationError myValidationError = new ValidationError();
                     myValidationError.setCode(itrnext.getInvalidValue()
-                                                     .toString());
+                            .toString());
                     myValidationError.setMessage(itrnext.getMessage());
                     myErrorList.add(myValidationError);
                 }
 
                 errorDetail.getErrors()
-                           .put("Error",
+                        .put("Error",
                                 myErrorList);
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // just ignore
         }
 
         logger.debug("Found an unhandled exception: " + errorDetail);
         return new ResponseEntity<>(errorDetail,
-                                    null,
-                                    HttpStatus.BAD_REQUEST);
+                null,
+                HttpStatus.BAD_REQUEST);
     }
 }

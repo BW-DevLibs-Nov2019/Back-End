@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.lambdaschool.devlibs.logging.Loggable;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,10 +19,18 @@ import java.util.List;
         description = "Controls Dev-Libs Actions")
 public class DevLib extends Auditable {
 
+    @ApiModelProperty(name = "Story",
+            value = "A wonderful DevLibs Story",
+            example = "Mary had a little lambda")
     private String story;
+
     @Transient
     List<String> answerstrings = new ArrayList<>();
 
+    @ApiModelProperty(name = "DevLib id",
+            value = "ID for DevLib",
+            required = true,
+            example = "1")
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long devlibid;
@@ -39,8 +48,6 @@ public class DevLib extends Auditable {
     @JsonIgnoreProperties("devLib")
     @JsonIgnore
     private List<DevLibAnswers> devLibAnswers = new ArrayList<>();
-
-
 
 
     @Column(nullable = true)

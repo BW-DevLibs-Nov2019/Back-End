@@ -24,16 +24,17 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+
 @Loggable
 @RestController
 @Api(tags = {"OpenEndpoint"})
-public class OpenController
-{
+public class OpenController {
     private static final Logger logger = LoggerFactory.getLogger(OpenController.class);
     @Autowired
     private UserService userService;
     @Autowired
     private RoleService roleService;
+
     // Create the user and Return the access token
     // http://localhost:2019/createnewuser
     // Just create the user
@@ -44,17 +45,15 @@ public class OpenController
     //     "password" : "corgie",
     //     "primaryemail" : "home@local.house"
     // }
-    private String getPort(HttpServletRequest httpServletRequest)
-    {
+    private String getPort(HttpServletRequest httpServletRequest) {
         if (httpServletRequest.getServerName()
-                .equalsIgnoreCase("localhost"))
-        {
+                .equalsIgnoreCase("localhost")) {
             return ":" + httpServletRequest.getLocalPort();
-        } else
-        {
+        } else {
             return "";
         }
     }
+
     @PostMapping(value = "/createnewuser",
             consumes = {"application/json"},
             produces = {"application/json"})
@@ -63,8 +62,7 @@ public class OpenController
                                                 boolean getaccess,
                                         @Valid
                                         @RequestBody
-                                                UserMinimum newminuser) throws URISyntaxException
-    {
+                                                UserMinimum newminuser) throws URISyntaxException {
         logger.trace(httpServletRequest.getMethod()
                 .toUpperCase() + " " + httpServletRequest.getRequestURI() + " accessed");
         // Create the user
@@ -84,8 +82,7 @@ public class OpenController
                 .toUri();
         responseHeaders.setLocation(newUserURI);
         String theToken = "";
-        if (getaccess)
-        {
+        if (getaccess) {
             // return the access token
             RestTemplate restTemplate = new RestTemplate();
             String requestURI = "http://" + httpServletRequest.getServerName() /*+ getPort(httpServletRequest)*/ + "/login";
@@ -110,18 +107,17 @@ public class OpenController
             theToken = restTemplate.postForObject(requestURI,
                     request,
                     String.class);
-        } else
-        {
+        } else {
             // nothing;
         }
         return new ResponseEntity<>(theToken,
                 responseHeaders,
                 HttpStatus.CREATED);
     }
+
     @ApiIgnore
     @GetMapping("favicon.ico")
-    void returnNoFavicon()
-    {
+    void returnNoFavicon() {
         logger.trace("favicon.ico endpoint accessed!");
     }
 }

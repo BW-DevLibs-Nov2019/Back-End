@@ -4,8 +4,7 @@ import com.lambdaschool.devlibs.models.Role;
 
 import java.util.List;
 
-public interface RoleService
-{
+public interface RoleService {
     List<Role> findAll();
 
     Role findRoleById(long id);

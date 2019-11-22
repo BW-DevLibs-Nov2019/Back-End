@@ -1,6 +1,5 @@
 package com.lambdaschool.devlibs.view;
 
-public interface JustTheCount
-{
+public interface JustTheCount {
     int getCount();
 }

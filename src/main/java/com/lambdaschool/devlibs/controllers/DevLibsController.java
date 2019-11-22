@@ -8,7 +8,7 @@ import com.lambdaschool.devlibs.models.User;
 import com.lambdaschool.devlibs.services.AnswerService;
 import com.lambdaschool.devlibs.services.DevLibService;
 import com.lambdaschool.devlibs.services.UserService;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.slf4j.Logger;
@@ -43,7 +43,11 @@ public class DevLibsController {
     @Autowired
     AnswerService answersService;
 
+
     //Get listAllDevLibs https://dev-libs-bw.herokuapp.com/devlibs/alldevlibsforuser
+    @ApiOperation(value = "returns all DevLibs",
+            response = DevLib.class,
+            responseContainer = "List")
     @GetMapping(value = "/alldevlibsforuser", produces = {"application/json"})
     public ResponseEntity<?> listAllDevLibs(
             Authentication authentication) {
@@ -57,24 +61,37 @@ public class DevLibsController {
     }
 
     //Find DevLibsByUserName Get https://dev-libs-bw.herokuapp.com/devlibs/devlib/{username}
+    @ApiOperation(value = "Finds all DevLibs by username",
+            response = DevLib.class,
+            responseContainer = "List")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "User Found", response = DevLib.class),
+            @ApiResponse(code = 404, message = "User NOT Found")
+    })
     @GetMapping(value = "/devlib/{username}",
             produces = {"application/json"})
-    public ResponseEntity<?> findDevLibsByUserName(
-            @PathVariable
-                    String username) {
+    public ResponseEntity<?> findDevLibsByUserName(@ApiParam(value = "User Name", required = true, example = "Ronnie")
+                                                   @PathVariable
+                                                           String username) {
 
         List<DevLib> devLibs = devLibService.findDevLibsByUserName(username);
         return new ResponseEntity<>(devLibs,
                 HttpStatus.OK);
     }
 
-
+    ///////////////////////////////////////////////////////////
     // GET findAnswersByDevLibId https://dev-libs-bw.herokuapp.com/devlibs/devlib/answers/{devlibid}
+    @ApiOperation(value = "Finds Answers By DevLib ID",
+            response = DevLib.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Found", response = DevLib.class),
+            @ApiResponse(code = 404, message = "404")
+    })
     @GetMapping(value = "/devlib/answers/{devlibid}",
             produces = {"application/json"})
-    public ResponseEntity<?> findAnswersByDevLibId(
-            @PathVariable
-                    Long devlibid) {
+    public ResponseEntity<?> findAnswersByDevLibId(@ApiParam(value = "Dev Lib Id", required = true, example = "248")
+                                                   @PathVariable
+                                                           Long devlibid) {
 
         List<String> answers = answersService.findAnswersByDevLibId(devlibid);
         return new ResponseEntity<>(answers,
@@ -82,6 +99,12 @@ public class DevLibsController {
     }
 
     //POST  addNewDevLibAnswers https://dev-libs-bw.herokuapp.com/devlibs/devlib/answers/{devlibid}
+    @ApiOperation(value = "Finds Answers By DevLib ID",
+            response = DevLib.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Found", response = DevLib.class),
+            @ApiResponse(code = 404, message = "404")
+    })
     @PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
     @PostMapping(value = "/devlib/answers/{devlibid}")
     public ResponseEntity<?> addNewDevLibAnswers(@Valid
@@ -98,6 +121,12 @@ public class DevLibsController {
 
     //POST addNewDevLib https://dev-libs-bw.herokuapp.com/devlibs/create
 
+    @ApiOperation(value = "Adds New DevLib",
+            response = DevLib.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Created", response = DevLib.class),
+            @ApiResponse(code = 404, message = "404")
+    })
     @PostMapping(value = "/create",
             consumes = {"application/json"},
             produces = {"application/json"})
@@ -120,20 +149,32 @@ public class DevLibsController {
     }
 
     //Put updateDevLib https://dev-libs-bw.herokuapp.com/devlibs/devlib/{devlibid}
+    @ApiOperation(value = "Updates DevLib",
+            response = DevLib.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Updated", response = DevLib.class),
+            @ApiResponse(code = 404, message = "404")
+    })
     @PutMapping(value = "/devlib/{devlibid}")
-    public ResponseEntity<?> updateDevLib(@RequestBody DevLib updateDevLib,
-                                          @PathVariable long devlibid) {
+    public ResponseEntity<?> updateDevLib(@RequestBody DevLib updateDevLib, @ApiParam(value = "Dev Lib Id", required = true, example = "248")
+    @PathVariable long devlibid) {
         devLibService.update(updateDevLib, devlibid);
         return new ResponseEntity<>("Updated dev libs", HttpStatus.OK);
     }
 
 
     //Delete deleteDevLibById https://dev-libs-bw.herokuapp.com/devlibs/devlib/{devlibid}
+    @ApiOperation(value = "Deletes DevLib By Id",
+            response = DevLib.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Deleted", response = DevLib.class),
+            @ApiResponse(code = 404, message = "404")
+    })
     @DeleteMapping(value = "/devlib/{devlibid}",
             produces = {"application/json"})
-    public ResponseEntity<?> deleteDevLibById(
-            @PathVariable
-                    Long devlibid) {
+    public ResponseEntity<?> deleteDevLibById(@ApiParam(value = "Dev Lib Id", required = true, example = "248")
+                                              @PathVariable
+                                                      Long devlibid) {
 
         devLibService.deleteDevLibById(devlibid);
         return new ResponseEntity<>("Deleted",
@@ -142,6 +183,13 @@ public class DevLibsController {
 
 
 }
+/* BACKUP PLAN
+    @PutMapping(value = "/devlib/answers/{answerid}")
+    public ResponseEntity<?> updateAnswer(@RequestBody Answers updateAnswers,
+                                          @PathVariable long answerid) {
+        answersService.update(answerid, updateAnswers);
+        return new ResponseEntity<>("Updated Answer", HttpStatus.OK);
+    }*/
 
 /*@PreAuthorize(value = "hasAuthority('ROLE_ADMIN')")
   @PostMapping(value = "/devlibs/answers/{devlibid}")
