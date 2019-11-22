@@ -112,7 +112,7 @@
     </dependencies>
 
     <build>
-        <finalName>dev-libs-bw</finalName>
+        <finalName>dev2-libs-bw</finalName>
 
         <plugins>
             <plugin>
